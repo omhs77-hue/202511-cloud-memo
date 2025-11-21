@@ -130,9 +130,42 @@ blockquote { border-left: 3px solid #38bdf8; padding-left: 1rem; color: #cbd5e1;
   padding: 1rem;
   margin: 1.5rem 0;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+  position: relative;
 }
 
-.uml-block img { display: block; width: 100%; height: auto; }
+.uml-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+}
+
+.uml-block .copy-code {
+  position: static;
+}
+
+.uml-source {
+  background: #0e1522;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 0 0 0.75rem;
+}
+
+.uml-source code {
+  color: #e8eef9;
+  font-family: var(--mono);
+  white-space: pre;
+}
+
+.uml-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
 
 @media (max-width: 780px) {
   .page-header { flex-direction: column; }

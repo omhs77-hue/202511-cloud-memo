@@ -57,12 +57,24 @@ function renderMarkdown(text) {
 
   md.renderer.rules.fence = function (tokens, idx, options, env, self) {
     const token = tokens[idx];
-    const info = (token.info || '').trim();
+    const info = (token.info || '').trim().toLowerCase();
+    const isPlantUml = info === 'plantuml' || token.content.includes('@startuml');
 
-    if (info === 'plantuml') {
+    if (isPlantUml) {
       const encoded = window.plantumlEncoder.encode(token.content);
       const url = `https://www.plantuml.com/plantuml/svg/${encoded}`;
-      return `<div class="uml-block"><div class="uml-toolbar"><button class="copy-code" data-content="${encodeURIComponent(token.content)}">Copy</button></div><img src="${url}" alt="PlantUML diagram"></div>`;
+      const escaped = md.utils.escapeHtml(token.content);
+      return `
+        <div class="uml-block">
+          <div class="uml-toolbar">
+            <button class="copy-code" data-content="${encodeURIComponent(token.content)}">Copy</button>
+          </div>
+          <pre class="uml-source"><code>${escaped}</code></pre>
+          <div class="uml-preview">
+            <img src="${url}" alt="PlantUML diagram" loading="lazy">
+          </div>
+        </div>
+      `;
     }
 
     const rendered = defaultFence(tokens, idx, options, env, self);
