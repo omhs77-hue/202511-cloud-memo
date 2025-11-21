@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cloud Memo</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it@13/dist/markdown-it.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it-anchor@8/dist/markdownItAnchor.umd.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/common.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/plantuml-encoder@1.4.0/dist/plantuml-encoder.min.js" defer></script>
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Cloudflare Pages ready</p>
+      <h1>チーム向けメモ</h1>
+      <p class="lede">URL を共有しているメンバーだけが参照する前提の、固定コンテンツの閲覧ページです。Markdown のコピーや PlantUML の図表示をサポートしています。</p>
+    </div>
+    <div class="actions">
+      <button id="copy-markdown" class="primary">Markdown をコピー</button>
+      <span id="copy-status" aria-live="polite" role="status"></span>
+    </div>
+  </header>
+
+  <main>
+    <section id="content" class="content" aria-live="polite">
+      <p>読み込み中...</p>
+    </section>
+  </main>
+
+  <template id="code-template">
+    <div class="code-block">
+      <button class="copy-code" type="button">Copy</button>
+      <pre><code></code></pre>
+    </div>
+  </template>
+</body>
+</html>
