@@ -6,10 +6,10 @@ Cloudflare Pages で公開できるシンプルな「URL を知っている人�
 ## 使い方
 1. `content.md` を開き、共有したい Markdown コンテンツを貼り付けます。
 2. Cloudflare Pages にこのリポジトリを接続し、フレームワークとして「静的サイト」、ビルドコマンドと出力ディレクトリはどちらも空欄
-（直下のファイルを公開）で設定します。Pages 側でカスタムビルドコマンドとして `npx wrangler deploy` が指定されていると、
-Worker 用のエントリポイントを探しに行って失敗するため「ビルドコマンドなし」で保存してください（どうしてもコマンドを指定
-する場合は、`npx wrangler pages deploy . --project-name <project>` か `npx wrangler deploy --assets=.` のように
-静的アセットを明示的に指す必要があります）。
+（直下のファイルを公開）で設定します。Pages 側でカスタムビルドコマンドとして `npx wrangler deploy` を設定すると、
+Worker 前提のコマンド扱いになり `It looks like you've run a Workers-specific command in a Pages project.` で失敗します。
+必ず「ビルドコマンドなし」に修正し、必要なら `wrangler pages deploy . --project-name <project>` のように Pages 用コマンドを
+明示します（`--assets=.` を付けた `wrangler deploy` でも可ですが、Pages 用の `wrangler pages deploy` が確実です）。
 3. デプロイ後、発行された URL をチームに共有してください。URL を知っているメンバーのみが参照する前提の運用になります。
 
 ## 特徴
@@ -29,7 +29,7 @@ Worker 用のエントリポイントを探しに行って失敗するため「�
 - `CLOUDFLARE_API_TOKEN` : 上記で発行した API トークン（Secret）。
 - `CLOUDFLARE_ACCOUNT_ID` : Cloudflare のアカウント ID（Secret）。
 - `CLOUDFLARE_PROJECT_NAME` : Cloudflare Pages のプロジェクト名（Repository Variables 推奨）。
-  - GitHub の Settings > Secrets and variables > Actions > Variables で `CLOUDFLARE_PROJECT_NAME` を登録してください。
+ - GitHub の Settings > Secrets and variables > Actions > Variables で `CLOUDFLARE_PROJECT_NAME` を登録してください。
 
 ### 初回デプロイ（Cloudflare 側設定）
 1. Cloudflare Pages で新規プロジェクトを作成し、デプロイ元に GitHub のこのリポジトリを接続します。
@@ -38,6 +38,11 @@ Worker 用のエントリポイントを探しに行って失敗するため「�
      保存してください（このリポジトリはビルド不要で、静的ファイル直置きです）。
    - 必要であれば環境変数として `NODE_VERSION=20` などを指定しても問題ありません。
 3. 作成後に表示されるプロジェクト名とアカウント ID を GitHub Secrets に設定します。
+
+#### 既存プロジェクトで `wrangler deploy` を指定していて失敗する場合
+- Cloudflare Pages の Dashboard で対象プロジェクトを開き、**Settings > Functions** のビルドコマンドが `npx wrangler deploy` になっていないか確認し、空欄に戻してください。
+- 同じ画面で Build output directory も空欄にします（静的ファイルをそのまま公開するため）。
+- もしコマンドをどうしても設定したい場合は、`wrangler pages deploy . --project-name <project>` を指定します（このリポジトリはビルド工程なしのため、通常は空欄推奨）。
 
 ### 自動デプロイの動作
 - `main` ブランチに push されると、`.github/workflows/deploy.yml` が `cloudflare/pages-action` を使って自動でデプロイします。
