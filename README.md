@@ -6,7 +6,10 @@ Cloudflare Pages で公開できるシンプルな「URL を知っている人�
 ## 使い方
 1. `content.md` を開き、共有したい Markdown コンテンツを貼り付けます。
 2. Cloudflare Pages にこのリポジトリを接続し、フレームワークとして「静的サイト」、ビルドコマンドと出力ディレクトリはどちらも空欄
-（直下のファイルを公開）で設定します。
+（直下のファイルを公開）で設定します。Pages 側でカスタムビルドコマンドとして `npx wrangler deploy` が指定されていると、
+Worker 用のエントリポイントを探しに行って失敗するため「ビルドコマンドなし」で保存してください（どうしてもコマンドを指定
+する場合は、`npx wrangler pages deploy . --project-name <project>` か `npx wrangler deploy --assets=.` のように
+静的アセットを明示的に指す必要があります）。
 3. デプロイ後、発行された URL をチームに共有してください。URL を知っているメンバーのみが参照する前提の運用になります。
 
 ## 特徴
@@ -22,15 +25,18 @@ Cloudflare Pages で公開できるシンプルな「URL を知っている人�
 - API トークン（スコープ: `Account.Cloudflare Pages` / `Edit` 以上）。
   - Cloudflare Dashboard > My Profile > API Tokens から作成可能です。
 
-### GitHub Secrets に設定する値
-- `CLOUDFLARE_API_TOKEN` : 上記で発行した API トークン。
-- `CLOUDFLARE_ACCOUNT_ID` : Cloudflare のアカウント ID。
-- `CLOUDFLARE_PAGES_PROJECT_NAME` : Cloudflare Pages プロジェクト名。
+### GitHub Secrets / Variables に設定する値
+- `CLOUDFLARE_API_TOKEN` : 上記で発行した API トークン（Secret）。
+- `CLOUDFLARE_ACCOUNT_ID` : Cloudflare のアカウント ID（Secret）。
+- `CLOUDFLARE_PROJECT_NAME` : Cloudflare Pages のプロジェクト名（Repository Variables 推奨）。
+  - GitHub の Settings > Secrets and variables > Actions > Variables で `CLOUDFLARE_PROJECT_NAME` を登録してください。
 
 ### 初回デプロイ（Cloudflare 側設定）
 1. Cloudflare Pages で新規プロジェクトを作成し、デプロイ元に GitHub のこのリポジトリを接続します。
 2. フレームワークプリセットは「なし（静的サイト）」、ビルドコマンドとビルド出力ディレクトリは空欄で保存します。
-   - 必要であれば環境変数として `NODE_VERSION=20` などを指定しても問題ありません（本プロジェクトはビルド不要）。
+   - `npx wrangler deploy` のように Worker 用コマンドを指定すると "Missing entry-point" で失敗するため、必ず空欄にしたまま
+     保存してください（このリポジトリはビルド不要で、静的ファイル直置きです）。
+   - 必要であれば環境変数として `NODE_VERSION=20` などを指定しても問題ありません。
 3. 作成後に表示されるプロジェクト名とアカウント ID を GitHub Secrets に設定します。
 
 ### 自動デプロイの動作
@@ -38,11 +44,18 @@ Cloudflare Pages で公開できるシンプルな「URL を知っている人�
 - 手動実行したい場合は、GitHub Actions の画面から `workflow_dispatch` を選んで実行できます。
 
 ### 手動アップロードで試す場合（ローカルから）
-Cloudflare CLI (`wrangler`) を使えば、ローカルからも同等の設定でデプロイできます。
+Cloudflare CLI (`wrangler`) を使えば、ローカルからも同等の設定でデプロイできます。`wrangler.jsonc` と `.wranglerignore` を
+同梱しているため、リポジトリ直下をそのまま Pages にアップロードできます。
 
 ```bash
-npm create cloudflare@latest -- --project-name <project> --site .
-# または `wrangler pages deploy . --project-name <project> --branch main`
+# 1) ローカルで wrangler を入れる
+npm install --global wrangler
+
+# 2) Pages プロジェクト名とアカウント情報で CLI にログイン
+wrangler login
+
+# 3) 静的ファイルを Pages にデプロイ（出力ディレクトリはカレント直下）
+wrangler pages deploy . --project-name <project> --branch main
 ```
 
 ## ローカルプレビュー
