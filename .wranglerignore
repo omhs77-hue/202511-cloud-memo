@@ -3,4 +3,3 @@
 node_modules
 wrangler.toml
 wrangler.json
-wrangler.jsonc
