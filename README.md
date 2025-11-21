@@ -38,6 +38,8 @@ Worker 前提のコマンド扱いになり `It looks like you've run a Workers-
    - `npx wrangler deploy` のように Worker 用コマンドを指定すると "Missing entry-point" で失敗するため、必ず空欄にしたまま
      保存してください（このリポジトリはビルド不要で、静的ファイル直置きです）。
    - 必要であれば環境変数として `NODE_VERSION=20` などを指定しても問題ありません。
+   - `wrangler.jsonc` は Pages 用の `pages_build_output_dir` のみを定義しています。Pages プロジェクトでは `assets` フィールドは
+     サポートされないため、追加しないでください（`wrangler deploy` 時のバリデーションエラーを避ける目的です）。
 3. 作成後に表示されるプロジェクト名とアカウント ID を GitHub Secrets に設定します。
 
 #### 既存プロジェクトで `wrangler deploy` を指定していて失敗する場合
