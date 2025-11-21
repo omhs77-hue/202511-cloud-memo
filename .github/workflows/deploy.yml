@@ -14,10 +14,18 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      CLOUDFLARE_PROJECT_NAME: ${{ vars.CLOUDFLARE_PROJECT_NAME }}
+      # Allow legacy CLOUD_FLARE_PROJECT_NAME while preferring CLOUDFLARE_PROJECT_NAME
+      CLOUDFLARE_PROJECT_NAME: ${{ vars.CLOUDFLARE_PROJECT_NAME || vars.CLOUD_FLARE_PROJECT_NAME }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Validate project name variable
+        run: |
+          if [ -z "${CLOUDFLARE_PROJECT_NAME}" ]; then
+            echo "CLOUDFLARE_PROJECT_NAME (or CLOUD_FLARE_PROJECT_NAME) repository variable is required" 1>&2
+            exit 1
+          fi
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1

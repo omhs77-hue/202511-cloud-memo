@@ -29,6 +29,7 @@ Worker 前提のコマンド扱いになり `It looks like you've run a Workers-
 - `CLOUDFLARE_API_TOKEN` : 上記で発行した API トークン（Secret）。
 - `CLOUDFLARE_ACCOUNT_ID` : Cloudflare のアカウント ID（Secret）。
 - `CLOUDFLARE_PROJECT_NAME` : Cloudflare Pages のプロジェクト名（Repository Variables 推奨）。
+ - 既存で `CLOUD_FLARE_PROJECT_NAME` を使っている場合も読み取りますが、今後は `CLOUDFLARE_PROJECT_NAME` を使ってください。
  - GitHub の Settings > Secrets and variables > Actions > Variables で `CLOUDFLARE_PROJECT_NAME` を登録してください。
 
 ### 初回デプロイ（Cloudflare 側設定）
